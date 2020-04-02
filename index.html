@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+    <script defer src="https://use.fontawesome.com/releases/v5.7.2/js/all.js" integrity="sha384-0pzryjIRos8mFBWMzSSZApWtPl/5++eIfzYmTgBBmXYdhvxPc+XcFEk+zJwDgWbP" crossorigin="anonymous"></script>
+    <title>Xpense</title>
+</head>
+</style>
+
+<body>
+    <div class="shadow p-0 mb-5 bg-white rounded">
+        <nav class="navbar navbar-dark bg-dark">
+            <span class="navbar-brand mb-0 h1">Expense App</span>
+            <span class="navbar-brand mb-0 h1" id="txtDisplay"></span>
+        </nav>
+    </div>
+    <div class="container-fluid bg-light" style="min-height: 100vh">
+        <div class="container">
+            <div class="jumbotron mt-4">
+                <h2></h2>
+                <h1 class="display-5"><b>Expers</b>-Expense Purse</h1>
+
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" id="txt" placeholder="Amount spent" aria-label="Amount spent" aria-describedby="spent in rupee" />
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="spent in rupee">₹</span>
+                    </div>
+                </div>
+                <div class="input-group mb-3">
+
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="spent at">@</span>
+                    </div>
+                    <input type="text" class="form-control" id="des" placeholder=" Spent On" aria-label="Amount spent at" aria-describedby="spent at" />
+
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-primary" type="button" id="btn1">Add</button>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <ul class="list-group" id="exTable">
+                </ul>
+            </div>
+
+
+</body>
+<script>
+    let counter = 0;
+    const txtdsply = document.querySelector("#txtDisplay")
+    const desc = document.querySelector("#des");
+    const exTbl = document.querySelector("#exTable")
+    const allExpense = [];
+
+    function counterIncrement() {
+        const expenseItem = [];
+
+        const text = document.querySelector("#txt");
+        const add = text.value;
+        const desc1 = desc.value;
+        const expense = parseInt(add, 10);
+        expenseItem.amount = expense;
+        expenseItem.description = desc1;
+        expenseItem.moment = new Date();
+
+
+
+        allExpense.push(expenseItem);
+
+        counter = counter + expense;
+        const sometext = `Total :${counter}`;
+        txtdsply.textContent = sometext;
+
+        renderList(allExpense);
+
+
+        // const expensetableHTML = allExpense.map(exp => expenseList(exp));
+        // const joinexpensetableHTML = expensetableHTML.join("");
+        // exTbl.innerHTML = joinexpensetableHTML;
+    }
+
+    const element = document.querySelector("#btn1");
+    element.addEventListener("click", counterIncrement, false);
+
+
+    function currentMoment(momento) {
+        return momento.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+        });
+
+    }
+
+
+    // Delete Items
+    function deleteItem(dateValue) {
+        const newArr = allExpense.filter(expense => expense.moment.valueOf() !== dateValue);
+        renderList(newArr);
+    }
+
+    function renderList(arrOfList) {
+        const expensetableHTML = arrOfList.map(exp => expenseList(exp));
+        const joinexpensetableHTML = expensetableHTML.join('');
+        exTbl.innerHTML = joinexpensetableHTML;
+    }
+
+
+    function expenseList({
+        description,
+        amount,
+        moment,
+
+    }) {
+        return `
+            <li class="list-group-item d-flex justify-content-between">
+                        <div class="d-flex flex-column">
+                            ${description}
+                            <small class="text-muted">${currentMoment(moment)}       ${
+                                moment.toLocaleTimeString()}
+                            </small>
+                        </div>
+                        <div>
+                            <span class="px-5">
+                                ${amount}
+								</span>
+                            <button type="button" class="btn btn-outline-danger btn-sm"
+                            onClick="deleteItem(${moment.valueOf() })">
+									<i class="fas fa-trash-alt"></i>
+								</button>
+                        </div>
+                    </li> `;
+    }
+</script>
+
+</body>
+
+</html>
